@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\GuestController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceptionistController;
@@ -24,6 +26,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    // Event
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+
+    // Guest
     Route::get('/event/{event}/guests', [GuestController::class, 'index'])->name('guests.index');
     Route::post('/event/{event}/guests/import', [GuestController::class, 'import'])->name('guests.import');
     Route::delete('/event/{event}/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
@@ -43,3 +53,5 @@ Route::middleware('pin.souvenir')->group(function () {
     Route::get('/event/{event}/souvenir', [SouvenirController::class, 'index'])->name('souvenir.index');
     Route::post('/event/{event}/souvenir/claim', [SouvenirController::class, 'claim'])->name('souvenir.claim');
 });
+
+Route::get('/{slug}/{qr_code}/qr', [InvitationController::class, 'show'])->name('invitation.show');

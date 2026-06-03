@@ -52,6 +52,7 @@
                                 <th class="px-6 py-3 text-center">Jumlah Tamu</th>
                                 <th class="px-6 py-3 text-center">Status</th>
                                 <th class="px-6 py-3"></th>
+                                <th class="px-6 py-3 text-center">Undangan</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-50">
@@ -82,6 +83,13 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <a href="{{ route('invitation.show', [$event->slug, $guest->qr_code]) }}"
+                                            target="_blank"
+                                            class="text-blue-500 hover:text-blue-700 text-xs">
+                                            Lihat
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

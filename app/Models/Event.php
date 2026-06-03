@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Event extends Model
 {
@@ -13,6 +14,8 @@ class Event extends Model
 
     protected $fillable = [
         'nama_event',
+        'slug',
+        'template',
         'tanggal',
         'lokasi',
         'souvenir_mode',
@@ -25,9 +28,16 @@ class Event extends Model
     {
         return [
             'tanggal' => 'date',
-            // 'receptionist_pin' => 'hashed',
-            // 'souvenir_pin' => 'hashed'
         ];
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Event $event) {
+            $event->slug = Str::slug($event->nama_event) . '-' . Str::random(6);
+        });
     }
 
     public function creator(): BelongsTo
