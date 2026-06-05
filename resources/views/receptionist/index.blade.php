@@ -38,6 +38,33 @@
                 </div>
             </form>
 
+            {{-- Tombol scan QR --}}
+            <div class="mb-4 flex gap-2">
+                <button onclick="openScanner()"
+                    class="flex items-center gap-2 border border-gray-200 text-gray-700 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-gray-50 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                    </svg>
+                    Scan QR
+                </button>
+            </div>
+
+            {{-- Modal scanner --}}
+            <div id="scanner-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-2xl p-6 w-full max-w-sm mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="font-medium text-gray-800">Scan QR Tamu</p>
+                        <button onclick="closeScanner()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="qr-reader" class="rounded-xl overflow-hidden"></div>
+                    <p id="scan-result" class="text-sm text-center text-gray-400 mt-3">Arahkan kamera ke QR code tamu</p>
+                </div>
+            </div>
+
             {{-- Hasil pencarian --}}
             @if($query && $guests->isEmpty())
                 <p class="text-center text-gray-400 text-sm py-8">Tamu tidak ditemukan.</p>
@@ -96,4 +123,70 @@
 
         </div>
     </div>
+
+    <style>
+        #qr-reader video,
+        #qr-reader canvas {
+            transform: none !important;
+            -webkit-transform: none !important;
+        }
+    </style>   
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        let scanner = null;
+
+        function openScanner() {
+            document.getElementById('scanner-modal').classList.remove('hidden');
+            scanner = new Html5QrcodeScanner('qr-reader', {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0,
+            });
+
+            scanner.render(async (decodedText) => {
+                await scanner.clear();
+                scanner = null;
+                closeScanner();
+                await processQr(decodedText);
+            });
+        }
+
+        function closeScanner() {
+            if (scanner) {
+                scanner.clear().catch(() => {});
+                scanner = null;
+            }
+            document.getElementById('scanner-modal').classList.add('hidden');
+        }
+
+        async function processQr(qrCode) {
+            const url = `/event/{{ $event->id }}/receptionist/scan/${qrCode}`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.success) {
+                showAlert('success', `✓ ${data.message} · ${data.guest.jumlah_tamu} tamu`);
+            } else {
+                showAlert('error', data.message);
+            }
+        }
+
+        function showAlert(type, message) {
+            const colors = type === 'success'
+                ? 'bg-green-50 border-green-200 text-green-700'
+                : 'bg-red-50 border-red-200 text-red-700';
+
+            const el = document.createElement('div');
+            el.className = `${colors} border rounded-xl px-4 py-3 text-sm mb-4`;
+            el.textContent = message;
+
+            const container = document.querySelector('.max-w-2xl');
+            container.insertBefore(el, container.firstChild);
+
+            setTimeout(() => el.remove(), 4000);
+        }
+    </script>
+
+
 </x-layouts.pin>
