@@ -104,7 +104,6 @@
                                     name="jumlah_hadir"
                                     value="{{ $guest->jumlah_tamu }}"
                                     min="1"
-                                    max="{{ $guest->jumlah_tamu }}"
                                     class="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center"
                                 />
                                 <button type="submit" class="ml-auto bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition">
