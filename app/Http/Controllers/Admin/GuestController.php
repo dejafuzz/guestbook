@@ -16,8 +16,13 @@ class GuestController extends Controller
         $search = $request->get('search');
 
         $guests = $event->guests()
-            ->when($search, fn($q) => $q->where('nama_utama', 'ilike', "%{$search}%"))
-            ->orderBy('nama_utama')
+            ->when($search, function($q) use ($search) {
+                $q->whereRaw(
+                    "similarity(nama_utama, ?) > 0.1 OR nama_utama ILIKE ?",
+                    [$search, "%{$search}%"]
+                )->orderByRaw("similarity(nama_utama, ?) DESC", [$search]);
+            })
+            ->when(!$search, fn($q) => $q->orderBy('nama_utama'))
             ->paginate(20)
             ->withQueryString();
 

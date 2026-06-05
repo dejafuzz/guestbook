@@ -15,7 +15,11 @@ class ReceptionistController extends Controller
 
         if ($query) {
             $guests = Guest::where('event_id', $event->id)
-                ->where('nama_utama', 'ilike', "%{$query}%")
+                ->whereRaw(
+                    "similarity(nama_utama, ?) > 0.1 OR nama_utama ILIKE ?",
+                    [$query, "%{$query}%"]
+                )
+                ->orderByRaw("similarity(nama_utama, ?) DESC", [$query])
                 ->get();
         }
 
