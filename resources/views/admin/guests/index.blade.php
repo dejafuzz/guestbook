@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Daftar Tamu — {{ $event->nama_event }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Daftar Tamu — {{ $event->nama_event }}
+                </h2>
+            </div>
+            <a href="{{ route('admin.events.show', $event->id) }}" class="text-sm text-gray-500 hover:text-gray-700">
+                ← Kembali
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-8">
@@ -35,6 +42,27 @@
                 </form>
             </div>
 
+            {{-- search form --}}
+            <div class="mb-4">
+                <form method="GET" action="{{ route('admin.guests.index', $event) }}">
+                    <div class="flex gap-2">
+                        <input type="text" name="search" value="{{ $search ?? '' }}"
+                            placeholder="Cari nama tamu..."
+                            class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
+                        <button type="submit"
+                            class="bg-gray-800 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+                            Cari
+                        </button>
+                        @if($search)
+                            <a href="{{ route('admin.guests.index', $event) }}"
+                                class="border border-gray-200 text-gray-600 rounded-xl px-4 py-2.5 text-sm hover:bg-gray-50 transition">
+                                Reset
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
             {{-- Tabel tamu --}}
             <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -51,7 +79,7 @@
                                 <th class="px-6 py-3 text-left">No. Undangan</th>
                                 <th class="px-6 py-3 text-center">Jumlah Tamu</th>
                                 <th class="px-6 py-3 text-center">Status</th>
-                                <th class="px-6 py-3"></th>
+                                <th class="px-6 py-3">Aksi</th>
                                 <th class="px-6 py-3 text-center">Undangan</th>
                             </tr>
                         </thead>
@@ -76,13 +104,20 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-400 hover:text-red-600 text-xs" onclick="return confirm('Hapus tamu ini?')">
-                                                Hapus
-                                            </button>
-                                        </form>
+                                        <div class="flex items-center justify-end gap-3">
+                                            <a href="{{ route('admin.guests.edit', [$event, $guest]) }}"
+                                                class="text-gray-400 hover:text-gray-600 text-xs">
+                                                Edit
+                                            </a>
+                                            <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-400 hover:text-red-600 text-xs"
+                                                    onclick="return confirm('Hapus tamu ini?')">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <a href="{{ route('invitation.show', [$event->slug, $guest->qr_code]) }}"
