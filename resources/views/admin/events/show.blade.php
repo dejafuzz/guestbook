@@ -40,6 +40,14 @@
                     <p class="font-medium text-gray-800 mb-1">Halaman Resepsionis</p>
                     <p class="text-sm text-gray-400">Buka halaman check-in untuk usher</p>
                 </a>
+                <a href="{{ route('admin.invitation.edit', $event) }}" class="bg-white rounded-2xl border border-gray-100 p-6 hover:border-gray-300 transition">
+                    <p class="font-medium text-gray-800 mb-1">Konten Undangan</p>
+                    <p class="text-sm text-gray-400">Edit foto, nama pengantin, cerita, dan info acara</p>
+                </a>
+                <a href="{{ route('monitor.show', $event->slug) }}" target="_blank" class="bg-white rounded-2xl border border-gray-100 p-6 hover:border-gray-300 transition">
+                    <p class="font-medium text-gray-800 mb-1">Link Monitor</p>
+                    <p class="text-sm text-gray-400">Bagikan ke pengantin untuk monitoring real-time</p>
+                </a>
             </div>
 
         </div>
