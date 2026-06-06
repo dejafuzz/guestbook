@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\GuestController;
+use App\Http\Controllers\Admin\InvitationContentController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceptionistController;
@@ -37,6 +39,13 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/event/{event}/guests', [GuestController::class, 'index'])->name('guests.index');
     Route::post('/event/{event}/guests/import', [GuestController::class, 'import'])->name('guests.import');
     Route::delete('/event/{event}/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
+    Route::get('/event/{event}/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
+    Route::put('/event/{event}/guests/{guest}', [GuestController::class, 'update'])->name('guests.update');
+
+    // Invitation
+    Route::get('/event/{event}/invitation', [InvitationContentController::class, 'edit'])->name('invitation.edit');
+    Route::post('/event/{event}/invitation', [InvitationContentController::class, 'update'])->name('invitation.update');
+    Route::delete('/event/{event}/invitation/gallery/{gallery}', [InvitationContentController::class, 'destroyGallery'])->name('invitation.gallery.destroy');
 }); 
 
 
@@ -47,6 +56,8 @@ Route::post('/event/{event}/pin', [PinController::class, 'verify'])->name('pin.v
 Route::middleware('pin.receptionist')->group(function () {
     Route::get('/event/{event}/receptionist', [ReceptionistController::class, 'index'])->name('receptionist.index');
     Route::post('/event/{event}/receptionist/checkin', [ReceptionistController::class, 'checkIn'])->name('receptionist.checkin');
+    Route::get('/event/{event}/receptionist/scan/{qr_code}', [ReceptionistController::class, 'scanResult'])->name('receptionist.scan');
+
 });
 
 Route::middleware('pin.souvenir')->group(function () {
@@ -55,3 +66,5 @@ Route::middleware('pin.souvenir')->group(function () {
 });
 
 Route::get('/{slug}/{qr_code}/qr', [InvitationController::class, 'show'])->name('invitation.show');
+
+Route::get('/event/{slug}/monitor', [MonitorController::class, 'show'])->name('monitor.show');

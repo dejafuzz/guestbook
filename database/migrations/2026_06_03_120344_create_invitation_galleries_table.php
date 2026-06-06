@@ -12,14 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guests', function (Blueprint $table) {
+        Schema::create('invitation_galleries', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->foreignUuid('event_id')->constrained()->cascadeOnDelete();
-            $table->string('nama_utama');
-            $table->string('nomor_undangan')->nullable();
-            $table->integer('jumlah_tamu')->default(1);
-            $table->string('qr_code')->unique()->default(DB::raw('gen_random_uuid()'));
-            $table->enum('status', ['terdaftar', 'hadir', 'souvenir_diambil'])->default('terdaftar');
+            $table->string('photo');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guests');
+        Schema::dropIfExists('invitation_galleries');
     }
 };

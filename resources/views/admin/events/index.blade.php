@@ -42,10 +42,13 @@
                                 <a href="{{ route('admin.events.show', $event) }}" class="border border-gray-200 text-gray-700 rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-50 transition">
                                     Kelola
                                 </a>
-                                <form method="POST" action="{{ route('admin.events.destroy', $event) }}">
+
+                                <form method="POST" action="{{ route('admin.events.destroy', $event) }}" class="delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-400 hover:text-red-600 text-sm" onclick="return confirm('Hapus event ini?')">
+                                    <button type="button"
+                                        onclick="confirmDelete(this.closest('form'), 'Hapus event ini?', 'Event dan semua data tamu akan dihapus permanen.')"
+                                        class="text-red-400 hover:text-red-600 text-sm">
                                         Hapus
                                     </button>
                                 </form>

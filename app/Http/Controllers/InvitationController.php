@@ -10,11 +10,18 @@ class InvitationController extends Controller
 {
     public function show(string $slug, string $qr_code)
     {
-        $event = Event::where('slug', $slug)->firstOrFail();
+        $event = Event::where('slug', $slug)
+            ->with(['invitationContent', 'invitationGalleries'])
+            ->firstOrFail();
+            
         $guest = Guest::where('qr_code', $qr_code)
-                ->where('event_id', $event->id)
-                ->firstOrFail();
+            ->where('event_id', $event->id)
+            ->firstOrFail();
 
-        return view('invitation.templates.' . $event->template , compact('event', 'guest'));
+        $content = $event->invitationContent;
+        $galleries = $event->invitationGalleries;
+
+        return view('invitation.templates.' . $event->template . '.index', compact('event', 'guest', 'content', 'galleries'));
     }
+
 }
