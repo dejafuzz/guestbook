@@ -92,7 +92,7 @@
                     </div>
 
                     @if(!$guest->sudahCheckIn())
-                        <form method="POST" action="{{ route('receptionist.checkin', $event) }}">
+                        <form method="POST" action="{{ route('receptionist.checkin', $event) }}" class="checkin-form">
                             @csrf
                             <input type="hidden" name="guest_id" value="{{ $guest->id }}">
                             <input type="hidden" name="metode" value="manual">
@@ -104,9 +104,12 @@
                                     name="jumlah_hadir"
                                     value="{{ $guest->jumlah_tamu }}"
                                     min="1"
+                                    max="{{ $guest->jumlah_tamu }}"
                                     class="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center"
                                 />
-                                <button type="submit" class="ml-auto bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition">
+                                <button type="button"
+                                    onclick="confirmCheckin(this.closest('form'), '{{ $guest->nama_utama }}')"
+                                    class="ml-auto bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition">
                                     Check-in
                                 </button>
                             </div>
@@ -184,6 +187,24 @@
             container.insertBefore(el, container.firstChild);
 
             setTimeout(() => el.remove(), 4000);
+        }
+    </script>
+
+    <script>
+        function confirmCheckin(form, nama) {
+            Swal.fire({
+                title: 'Konfirmasi Check-in',
+                text: `${nama} akan dicatat sebagai hadir.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#e5e7eb',
+                confirmButtonText: 'Ya, check-in',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) form.submit();
+            });
         }
     </script>
 

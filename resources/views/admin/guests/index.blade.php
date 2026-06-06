@@ -109,11 +109,13 @@
                                                 class="text-gray-400 hover:text-gray-600 text-xs">
                                                 Edit
                                             </a>
-                                            <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}">
+
+                                            <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-400 hover:text-red-600 text-xs"
-                                                    onclick="return confirm('Hapus tamu ini?')">
+                                                <button type="button"
+                                                    onclick="confirmDelete(this.closest('form'), 'Hapus tamu ini?', '{{ $guest->nama_utama }} akan dihapus dari daftar tamu.')"
+                                                    class="text-red-400 hover:text-red-600 text-xs">
                                                     Hapus
                                                 </button>
                                             </form>
