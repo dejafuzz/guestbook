@@ -65,6 +65,58 @@
                 </div>
             </div>
 
+            {{-- Modal konfirmasi check-in --}}
+            <div id="checkin-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-2xl p-6 w-full max-w-sm mx-4">
+                    <div class="flex items-center justify-between mb-5">
+                        <p class="font-medium text-gray-800">Konfirmasi Check-in</p>
+                        <button onclick="closeCheckinModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Info tamu --}}
+                    <div class="bg-gray-50 rounded-xl p-4 mb-5">
+                        <p class="text-xs text-gray-400 mb-1">Nama Tamu</p>
+                        <p class="font-medium text-gray-800 text-lg" id="modal-nama"></p>
+                        <p class="text-sm text-gray-400 mt-1">No. Undangan: <span id="modal-nomor"></span></p>
+                    </div>
+
+                    {{-- Input jumlah hadir --}}
+                    <div class="mb-5">
+                        <label class="block text-sm text-gray-600 mb-2">Jumlah tamu yang hadir</label>
+                        <div class="flex items-center gap-3">
+                            <button type="button" onclick="decrementHadir()"
+                                class="w-10 h-10 rounded-xl border border-gray-200 text-gray-600 text-lg font-medium hover:bg-gray-50 transition">
+                                −
+                            </button>
+                            <input type="number" id="modal-jumlah-hadir" min="1"
+                                class="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-gray-300" />
+                            <button type="button" onclick="incrementHadir()"
+                                class="w-10 h-10 rounded-xl border border-gray-200 text-gray-600 text-lg font-medium hover:bg-gray-50 transition">
+                                +
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 text-center">Maksimal <span id="modal-max-hadir"></span> tamu</p>
+                    </div>
+
+                    <input type="hidden" id="modal-guest-id" />
+
+                    <div class="flex gap-3">
+                        <button onclick="closeCheckinModal()"
+                            class="flex-1 border border-gray-200 text-gray-700 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-gray-50 transition">
+                            Batal
+                        </button>
+                        <button onclick="submitCheckin()"
+                            class="flex-1 bg-gray-800 text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+                            Check-in
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             {{-- Hasil pencarian --}}
             @if($query && $guests->isEmpty())
                 <p class="text-center text-gray-400 text-sm py-8">Tamu tidak ditemukan.</p>
@@ -134,10 +186,13 @@
         }
     </style>   
 
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
         let scanner = null;
+        let maxHadir = 1;
 
+        // Scanner
         function openScanner() {
             document.getElementById('scanner-modal').classList.remove('hidden');
             scanner = new Html5QrcodeScanner('qr-reader', {
@@ -167,30 +222,88 @@
             const res = await fetch(url);
             const data = await res.json();
 
-            if (data.success) {
-                showAlert('success', `✓ ${data.message} · ${data.guest.jumlah_tamu} tamu`);
-            } else {
-                showAlert('error', data.message);
+            if (!data.success && data.already_checkin) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sudah Check-in',
+                    html: `<b>${data.guest.nama}</b> sudah check-in pukul ${data.guest.waktu_checkin}<br>Jumlah hadir: ${data.guest.jumlah_hadir} orang`,
+                    confirmButtonColor: '#1f2937',
+                });
+                return;
             }
+
+            if (!data.success) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tidak Ditemukan',
+                    text: data.message,
+                    confirmButtonColor: '#1f2937',
+                });
+                return;
+            }
+
+            openCheckinModal(data.guest);
         }
 
-        function showAlert(type, message) {
-            const colors = type === 'success'
-                ? 'bg-green-50 border-green-200 text-green-700'
-                : 'bg-red-50 border-red-200 text-red-700';
-
-            const el = document.createElement('div');
-            el.className = `${colors} border rounded-xl px-4 py-3 text-sm mb-4`;
-            el.textContent = message;
-
-            const container = document.querySelector('.max-w-2xl');
-            container.insertBefore(el, container.firstChild);
-
-            setTimeout(() => el.remove(), 4000);
+        // Modal check-in
+        function openCheckinModal(guest) {
+            maxHadir = guest.jumlah_tamu;
+            document.getElementById('modal-guest-id').value = guest.id;
+            document.getElementById('modal-nama').textContent = guest.nama;
+            document.getElementById('modal-nomor').textContent = guest.nomor_undangan;
+            document.getElementById('modal-jumlah-hadir').value = guest.jumlah_tamu;
+            document.getElementById('modal-jumlah-hadir').max = guest.jumlah_tamu;
+            document.getElementById('modal-max-hadir').textContent = guest.jumlah_tamu;
+            document.getElementById('checkin-modal').classList.remove('hidden');
         }
-    </script>
 
-    <script>
+        function closeCheckinModal() {
+            document.getElementById('checkin-modal').classList.add('hidden');
+        }
+
+        function incrementHadir() {
+            const input = document.getElementById('modal-jumlah-hadir');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decrementHadir() {
+            const input = document.getElementById('modal-jumlah-hadir');
+            if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+        }
+
+        async function submitCheckin() {
+            const guestId = document.getElementById('modal-guest-id').value;
+            const jumlahHadir = document.getElementById('modal-jumlah-hadir').value;
+            const nama = document.getElementById('modal-nama').textContent;
+
+            const res = await fetch('{{ route('receptionist.checkin', $event) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    guest_id: guestId,
+                    jumlah_hadir: jumlahHadir,
+                    metode: 'qr',
+                }),
+            });
+
+            const data = await res.json();
+            closeCheckinModal();
+
+            Swal.fire({
+                icon: data.success ? 'success' : 'error',
+                title: data.success ? 'Check-in Berhasil' : 'Gagal',
+                text: data.message,
+                confirmButtonColor: '#1f2937',
+                timer: data.success ? 2500 : null,
+                timerProgressBar: data.success,
+            });
+        }
+
+        // SweetAlert untuk check-in manual
         function confirmCheckin(form, nama) {
             Swal.fire({
                 title: 'Konfirmasi Check-in',
