@@ -37,6 +37,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Guest
     Route::get('/event/{event}/guests', [GuestController::class, 'index'])->name('guests.index');
+    Route::get('/event/{event}/guests/create', [GuestController::class, 'create'])->name('guests.create');
+    Route::post('/event/{event}/guests', [GuestController::class, 'store'])->name('guests.store');
     Route::post('/event/{event}/guests/import', [GuestController::class, 'import'])->name('guests.import');
     Route::delete('/event/{event}/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
     Route::get('/event/{event}/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
