@@ -6,7 +6,7 @@
                     Daftar Tamu — {{ $event->nama_event }}
                 </h2>
             </div>
-            <a href="{{ route('admin.events.show', $event->id) }}" class="text-sm text-gray-500 hover:text-gray-700">
+            <a href="{{ route('client.dashboard') }}" class="text-sm text-gray-500 hover:text-gray-700">
                 ← Kembali
             </a>
         </div>
@@ -15,7 +15,6 @@
     <div class="py-8">
         <div class="max-w-5xl mx-auto px-4">
 
-            {{-- Alert --}}
             @if(session('success'))
                 <div class="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-3 mb-6 text-sm">
                     {{ session('success') }}
@@ -36,19 +35,34 @@
                             <li class="text-red-600 text-xs">{{ $error }}</li>
                         @endforeach
                     </ul>
-                    <p class="text-red-400 text-xs mt-2">Baris lain yang valid tetap berhasil diimport.</p>
                 </div>
             @endif
 
             {{-- Import form --}}
             <div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
-                <h3 class="font-medium text-gray-800 mb-1">Import Tamu</h3>
-                <p class="text-sm text-gray-400 mb-4">Upload file CSV dengan kolom:
-                    <code class="bg-gray-100 px-1 rounded">nama_utama</code>,
-                    <code class="bg-gray-100 px-1 rounded">nomor_undangan</code>,
-                    <code class="bg-gray-100 px-1 rounded">jumlah_tamu</code>
-                </p>
-                <form method="POST" action="{{ route('admin.guests.import', $event) }}" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Import Tamu</h3>
+                    <p class="text-sm text-gray-400 mb-3">Upload file CSV dengan kolom:
+                        <code class="bg-gray-100 px-1 rounded text-xs">nama_utama</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">nomor_undangan (tidak wajib)</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">jumlah_tamu</code>
+                    </p>
+                    
+                    {{-- Card Kecil untuk Download Template --}}
+                    <div class="inline-flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl p-2.5 pr-4 text-xs">
+                        <div class="bg-green-100 text-green-700 p-1.5 rounded-lg">
+                            <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700 mb-0.5">Belum punya template?</p>
+                            <a href="{{ asset('template/guest-example.xlsx') }}" class="text-blue-600 hover:underline font-semibold" download="">Download Excel Template</a>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ route('client.guests.import', $event) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="flex flex-col sm:flex-row gap-3">
                         <input type="file" name="file" accept=".xlsx,.xls,.csv"
@@ -65,7 +79,7 @@
 
             {{-- Search --}}
             <div class="mb-4">
-                <form method="GET" action="{{ route('admin.guests.index', $event) }}">
+                <form method="GET" action="{{ route('client.guests.index', $event) }}">
                     <div class="flex gap-2">
                         <input type="text" name="search" value="{{ $search ?? '' }}"
                             placeholder="Cari nama tamu..."
@@ -75,7 +89,7 @@
                             Cari
                         </button>
                         @if($search)
-                            <a href="{{ route('admin.guests.index', $event) }}"
+                            <a href="{{ route('client.guests.index', $event) }}"
                                 class="border border-gray-200 text-gray-600 rounded-xl px-4 py-2.5 text-sm hover:bg-gray-50 transition whitespace-nowrap">
                                 Reset
                             </a>
@@ -88,7 +102,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
                     <p class="font-medium text-gray-800">{{ $guests->total() }} tamu terdaftar</p>
-                    <a href="{{ route('admin.guests.create', $event) }}"
+                    <a href="{{ route('client.guests.create', $event) }}"
                         class="bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition">
                         + Tambah Tamu
                     </a>
@@ -144,8 +158,8 @@
                                         </svg>
                                     </a>
                                     <a href="{{ route('invitation.show', [$event->slug, $guest->qr_code]) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">Lihat</a>
-                                    <a href="{{ route('admin.guests.edit', [$event, $guest]) }}" class="text-gray-400 hover:text-gray-600 text-xs">Edit</a>
-                                    <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}">
+                                    <a href="{{ route('client.guests.edit', [$event, $guest]) }}" class="text-gray-400 hover:text-gray-600 text-xs">Edit</a>
+                                    <form method="POST" action="{{ route('client.guests.destroy', [$event, $guest]) }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button"
@@ -214,8 +228,8 @@
                                                     </svg>
                                                 </a>
                                                 <a href="{{ route('invitation.show', [$event->slug, $guest->qr_code]) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">Lihat</a>
-                                                <a href="{{ route('admin.guests.edit', [$event, $guest]) }}" class="text-gray-400 hover:text-gray-600 text-xs">Edit</a>
-                                                <form method="POST" action="{{ route('admin.guests.destroy', [$event, $guest]) }}">
+                                                <a href="{{ route('client.guests.edit', [$event, $guest]) }}" class="text-gray-400 hover:text-gray-600 text-xs">Edit</a>
+                                                <form method="POST" action="{{ route('client.guests.destroy', [$event, $guest]) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button"
@@ -237,7 +251,6 @@
                     </div>
                 @endif
             </div>
-
         </div>
     </div>
 

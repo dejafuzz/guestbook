@@ -26,7 +26,27 @@ class GuestController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.guests.index', compact('event', 'guests', 'search'));
+        $content = $event->invitationContent;
+
+        return view('admin.guests.index', compact('event', 'guests', 'search', 'content'));
+    }
+
+    public function create(Event $event)
+    {
+        return view('admin.guests.create', compact('event'));
+    }
+
+    public function store(Request $request, Event $event)
+    {
+        $request->validate([
+            'nama_utama' => 'required|string|max:255',
+            'nomor_undangan' => 'nullable|string|max:50',
+            'jumlah_tamu' => 'required|integer|min:1',
+        ]);
+
+        $event->guests()->create($request->only(['nama_utama', 'nomor_undangan', 'jumlah_tamu']));
+
+        return redirect()->route('admin.guests.index', $event)->with('success', 'Tamu berhasil ditambahkan.');
     }
 
 
@@ -36,10 +56,25 @@ class GuestController extends Controller
             'file' => 'required|file|extensions:csv,xls,xlsx|max:2048'
         ]);
 
-        Excel::import(new GuestImport($event->id), $request->file('file'));
+        $import = new GuestImport($event->id);
+        Excel::import($import, $request->file('file'));
+
+        $failures = $import->getFailures();
+
+        if (!empty($failures)) {
+            $errors = [];
+            foreach ($failures as $failure) {
+                $errors[] = "Baris {$failure->row()}: " . implode(', ', $failure->errors());
+            }
+
+            return back()
+                ->with('import_errors', $errors)
+                ->with('warning', 'Import selesai dengan beberapa baris yang dilewati.');
+        }
 
         return back()->with('success', 'Data tamu berhasil diimport.');
     }
+
 
     public function destroy(Event $event, Guest $guest)
     {

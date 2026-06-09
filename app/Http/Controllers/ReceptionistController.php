@@ -29,7 +29,7 @@ class ReceptionistController extends Controller
     public function checkIn(Request $request, Event $event)
     {
         $request->validate([
-            'guest_id' => 'required|uuid|exists:guests,id',
+            'guest_id' => 'required|exists:guests,id',
             'jumlah_hadir' => 'required|integer|min:1',
             'metode' => 'required|in:qr,manual',
         ]);
@@ -39,16 +39,26 @@ class ReceptionistController extends Controller
             ->firstOrFail();
 
         if ($guest->sudahCheckIn()) {
-            return back()->with('error', 'Tamu ini sudah check-in sebelumnya.');
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Tamu sudah check-in sebelumnya.']);
+            }
+            return back()->with('error', 'Tamu sudah check-in sebelumnya.');
         }
 
         $guest->checkIn()->create([
             'jumlah_hadir' => $request->jumlah_hadir,
             'metode' => $request->metode,
-            'dicatat_oleh' => session('receptionist_name') ?? 'Usher',
+            'dicatat_oleh' => 'Usher',
         ]);
 
         $guest->update(['status' => 'hadir']);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Selamat datang, {$guest->nama_utama}!"
+            ]);
+        }
 
         return back()->with('success', "Tamu {$guest->nama_utama} berhasil check-in.");
     }
@@ -60,36 +70,33 @@ class ReceptionistController extends Controller
             ->first();
 
         if (!$guest) {
-            return response()->json(['success' => false, 'message' => 'Tamu tidak ditemukan.']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Tamu tidak ditemukan.'
+            ]);
         }
 
         if ($guest->sudahCheckIn()) {
             return response()->json([
                 'success' => false,
+                'already_checkin' => true,
                 'message' => 'Tamu sudah check-in sebelumnya.',
                 'guest' => [
                     'nama' => $guest->nama_utama,
                     'jumlah_tamu' => $guest->jumlah_tamu,
-                    'status' => $guest->status,
+                    'jumlah_hadir' => $guest->checkIn->jumlah_hadir,
+                    'waktu_checkin' => $guest->checkIn->waktu_checkin->format('H:i'),
                 ]
             ]);
         }
 
-        $guest->checkIn()->create([
-            'jumlah_hadir' => $guest->jumlah_tamu,
-            'metode' => 'qr',
-            'dicatat_oleh' => 'Usher',
-        ]);
-
-        $guest->update(['status' => 'hadir']);
-
         return response()->json([
             'success' => true,
-            'message' => "Selamat datang, {$guest->nama_utama}!",
             'guest' => [
+                'id' => $guest->id,
                 'nama' => $guest->nama_utama,
                 'jumlah_tamu' => $guest->jumlah_tamu,
-                'status' => 'hadir',
+                'nomor_undangan' => $guest->nomor_undangan ?? '-',
             ]
         ]);
     }
