@@ -31,7 +31,7 @@ class GuestImport implements ToModel, WithHeadingRow, WithValidation, SkipsEmpty
     {
         return new Guest([
             'event_id' => $this->eventId,
-            'nomor_undangan' => $row['nomor_undangan'],
+            'nomor_undangan' => !empty($row['nomor_undangan']) ? $row['nomor_undangan'] : null,
             'nama_utama' => $row['nama_utama'],
             'jumlah_tamu' => !empty($row['jumlah_tamu']) ? (int) $row['jumlah_tamu'] : 1,
         ]);
