@@ -16,6 +16,7 @@ class RoleSeeder extends Seeder
         Role::insert([
             ['name' => 'superadmin', 'label' => 'Super Admin', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'admin', 'label' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'client', 'label' => 'Client', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

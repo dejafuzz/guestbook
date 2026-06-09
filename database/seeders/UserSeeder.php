@@ -25,5 +25,11 @@ class UserSeeder extends Seeder
             'password' => '123123123',
             'role_id' => 2
         ]);
+        User::create([
+            'name' => 'Client',
+            'email' => 'client@guestbook.com',
+            'password' => '123123123',
+            'role_id' => 3
+        ]);
     }
 }
