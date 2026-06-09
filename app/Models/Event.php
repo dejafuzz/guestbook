@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
@@ -59,6 +60,11 @@ class Event extends Model
     public function invitationGalleries(): HasMany
     {
         return $this->hasMany(InvitationGallery::class)->orderBy('order');
+    }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
     }
 
 }
