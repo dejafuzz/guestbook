@@ -78,6 +78,13 @@
                                     <p class="text-xs font-medium text-gray-700">Floral</p>
                                 </div>
                             </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="template" value="midnight" class="sr-only peer" />
+                                <div class="border-2 border-transparent peer-checked:border-gray-900 rounded-xl p-3 text-center bg-gray-50 hover:bg-gray-100 transition">
+                                    <div class="w-full h-16 bg-gray-950 rounded-lg mb-2"></div>
+                                    <p class="text-xs font-medium text-gray-700">Midnight</p>
+                                </div>
+                            </label>
                         </div>
                         @error('template') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>

@@ -16,11 +16,25 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->foreignUuid('event_id')->constrained()->cascadeOnDelete();
             
-            // Pengantin
+            // Mempelai Pria
             $table->string('groom_name');
-            $table->string('bride_name');
+            $table->string('groom_full_name')->nullable();
             $table->string('groom_photo')->nullable();
+            $table->string('groom_father')->nullable();
+            $table->string('groom_mother')->nullable();
+            $table->string('groom_child_order')->nullable();
+            $table->string('groom_instagram')->nullable();
+            
+            // Mempelai Wanita
+            $table->string('bride_name');
+            $table->string('bride_full_name')->nullable();
             $table->string('bride_photo')->nullable();
+            $table->string('bride_father')->nullable();
+            $table->string('bride_mother')->nullable();
+            $table->string('bride_child_order')->nullable();
+            $table->string('bride_instagram')->nullable();
+            
+            // Pengantin
             $table->string('hero_photo')->nullable();
             
             // Cerita
@@ -43,6 +57,9 @@ return new class extends Migration
             // Quotes / penutup
             $table->text('opening_quote')->nullable();
             $table->text('closing_quote')->nullable();
+
+            // Music
+            $table->string('music_file')->nullable();
 
             $table->timestamps();
         });

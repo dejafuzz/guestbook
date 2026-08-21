@@ -22,6 +22,16 @@ class InvitationContentController extends Controller
         $request->validate([
             'groom_name' => 'required|string|max:255',
             'bride_name' => 'required|string|max:255',
+            'groom_full_name' => 'nullable|string|max:255',
+            'bride_full_name' => 'nullable|string|max:255',
+            'groom_father' => 'nullable|string|max:255',
+            'groom_mother' => 'nullable|string|max:255',
+            'groom_child_order' => 'nullable|string|max:100',
+            'groom_instagram' => 'nullable|string|max:100',
+            'bride_father' => 'nullable|string|max:255',
+            'bride_mother' => 'nullable|string|max:255',
+            'bride_child_order' => 'nullable|string|max:100',
+            'bride_instagram' => 'nullable|string|max:100',
             'groom_photo' => 'nullable|image|max:2048',
             'bride_photo' => 'nullable|image|max:2048',
             'hero_photo' => 'nullable|image|max:2048',
@@ -38,6 +48,7 @@ class InvitationContentController extends Controller
             'reception_maps_url' => 'nullable|url',
             'opening_quote' => 'nullable|string',
             'closing_quote' => 'nullable|string',
+            'music_file' => 'nullable|file|mimes:mp3,ogg,wav|max:10240',
         ]);
 
         $data = $request->except(['groom_photo', 'bride_photo', 'hero_photo', 'galleries']);
@@ -47,11 +58,17 @@ class InvitationContentController extends Controller
                 $data[$photo] = $request->file($photo)->store("events/{$event->id}", 'public');
             }
         }
+        
+        // Handling upload audio
+        if ($request->hasFile('music_file')) {
+            $data['music_file'] = $request->file('music_file')->store("events/{$event->id}/music", 'public');
+        }
 
         $event->invitationContent()->updateOrCreate(
             ['event_id' => $event->id],
             $data
         );
+
 
         // Handle gallery upload
         if ($request->hasFile('galleries')) {

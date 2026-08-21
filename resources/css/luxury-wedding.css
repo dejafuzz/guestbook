@@ -1,0 +1,1029 @@
+/* =======================================================
+   LUXURY WEDDING THEME
+   PART 1
+======================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+/* =======================================================
+   VARIABLES
+======================================================= */
+
+:root {
+    --gold: #d4af37;
+    --gold-light: #f4e29a;
+    --gold-dark: #9b7c1f;
+    --black: #0d0d0d;
+    --black-soft: #141414;
+    --black-card: #1a1a1a;
+    --text: #ffffff;
+    --text-muted: #9ca3af;
+    --border: rgba(212, 175, 55, .15);
+    --shadow-gold: 0 0 20px rgba(212, 175, 55, .15);
+}
+
+
+/* =======================================================
+   RESET
+======================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+
+/* =======================================================
+   TYPOGRAPHY
+======================================================= */
+
+h1,
+h2,
+h3,
+.hero-name,
+.opening-groom,
+.opening-bride {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header span {
+    display: block;
+    color: var(--gold);
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 12px;
+}
+
+.section-header h2 {
+    font-size: 42px;
+    font-weight: 500;
+}
+
+
+/* =======================================================
+   DIVIDER
+======================================================= */
+
+.divider {
+    width: 120px;
+    height: 1px;
+    margin: 30px auto;
+    background: linear-gradient( to right, transparent, var(--gold), transparent);
+}
+
+
+/* =======================================================
+   OPENING SCREEN
+======================================================= */
+
+#opening-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: radial-gradient( circle at center, #1b1b1b, #050505);
+    transition: all .8s ease;
+}
+
+.opening-content {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.opening-label {
+    display: block;
+    color: var(--gold);
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.opening-groom,
+.opening-bride {
+    font-size: 58px;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.opening-ampersand {
+    display: block;
+    margin: 10px 0;
+    color: var(--gold);
+    font-size: 42px;
+}
+
+.guest-box {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+.guest-box p {
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.guest-box h3 {
+    font-size: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+}
+
+#openInvitation {
+    padding: 14px 32px;
+    border-radius: 999px;
+    background: linear-gradient( 135deg, var(--gold), var(--gold-light));
+    color: #111;
+    font-weight: 600;
+    transition: .3s;
+}
+
+#openInvitation:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, .3);
+}
+
+
+/* =======================================================
+   HERO
+======================================================= */
+
+#hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( to bottom, rgba(0, 0, 0, .45), rgba(0, 0, 0, .75), rgba(0, 0, 0, .95));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 5;
+    padding: 30px;
+    max-width: 900px;
+}
+
+.hero-label {
+    color: var(--gold);
+    letter-spacing: .45em;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 20px;
+}
+
+.hero-name {
+    font-size: clamp(56px, 10vw, 120px);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(212, 175, 55, .15);
+}
+
+.hero-ampersand {
+    display: block;
+    margin: 15px 0;
+    color: var(--gold);
+    font-size: 52px;
+}
+
+.hero-date {
+    color: #fff;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.hero-location {
+    margin-top: 10px;
+    color: #b5b5b5;
+    font-size: 14px;
+}
+
+
+/* =======================================================
+   SCROLL INDICATOR
+======================================================= */
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gold);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-8px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-4px);
+    }
+}
+
+
+/* =======================================================
+   GENERIC SECTION
+======================================================= */
+
+section {
+    position: relative;
+    padding: 110px 24px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* =======================================================
+   RESPONSIVE
+======================================================= */
+
+@media (max-width: 768px) {
+    .opening-groom,
+    .opening-bride {
+        font-size: 44px;
+    }
+    .guest-box h3 {
+        font-size: 24px;
+    }
+    .hero-name {
+        font-size: 64px;
+    }
+    .section-header h2 {
+        font-size: 32px;
+    }
+}
+
+
+/* =======================================================
+   COUNTDOWN SECTION
+======================================================= */
+
+#countdown {
+    background: linear-gradient( to bottom, #101010, #161616);
+}
+
+.countdown-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.countdown-card {
+    position: relative;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    transition: .35s;
+}
+
+.countdown-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .4), 0 0 25px rgba(212, 175, 55, .15);
+}
+
+.countdown-card h3 {
+    font-size: 62px;
+    color: var(--gold);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.countdown-card p {
+    margin-top: 12px;
+    color: #9d9d9d;
+    text-transform: uppercase;
+    letter-spacing: .25em;
+    font-size: 11px;
+}
+
+
+/* =======================================================
+   COUPLE SECTION
+======================================================= */
+
+#couple {
+    background: var(--black);
+}
+
+.couple-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 140px 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.couple-card {
+    text-align: center;
+}
+
+.couple-image {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid rgba(212, 175, 55, .25);
+    box-shadow: 0 0 40px rgba(212, 175, 55, .08);
+    transition: .4s;
+}
+
+.couple-image:hover {
+    transform: scale(1.03);
+}
+
+.couple-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.couple-card h3 {
+    margin-top: 26px;
+    font-size: 44px;
+    font-weight: 500;
+}
+
+.couple-symbol {
+    text-align: center;
+    font-size: 90px;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+}
+
+
+/* =======================================================
+   EVENT INFORMATION
+======================================================= */
+
+#event-info {
+    background: linear-gradient( to bottom, #151515, #101010);
+}
+
+.event-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.event-card {
+    position: relative;
+    text-align: center;
+    padding: 50px 30px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    transition: .35s;
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .35), 0 0 20px rgba(212, 175, 55, .12);
+}
+
+.event-icon {
+    font-size: 54px;
+    margin-bottom: 18px;
+}
+
+.event-card h3 {
+    font-size: 34px;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.event-card p {
+    color: #d6d6d6;
+    margin-bottom: 10px;
+    line-height: 1.7;
+}
+
+.event-card small {
+    display: block;
+    color: #999;
+    margin-bottom: 25px;
+}
+
+.event-card a {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 999px;
+    color: #111;
+    font-weight: 600;
+    background: linear-gradient( 135deg, var(--gold), var(--gold-light));
+    transition: .3s;
+}
+
+.event-card a:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =======================================================
+   LOVE STORY TIMELINE
+======================================================= */
+
+#story {
+    background: var(--black);
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto 70px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient( to bottom, var(--gold), rgba(212, 175, 55, .2));
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 80px;
+    margin-bottom: 60px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 8px;
+    top: 5px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 20px rgba(212, 175, 55, .4);
+}
+
+.timeline-year {
+    color: var(--gold);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.timeline-content h3 {
+    font-size: 34px;
+    margin-bottom: 12px;
+}
+
+.timeline-content p {
+    color: #c5c5c5;
+    line-height: 1.8;
+}
+
+.love-story-text {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.love-story-text p {
+    font-size: 18px;
+    line-height: 2;
+    color: #d1d1d1;
+    font-style: italic;
+}
+
+
+/* =======================================================
+   GLASS EFFECT
+======================================================= */
+
+.glass {
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .08);
+    backdrop-filter: blur(14px);
+}
+
+
+/* =======================================================
+   GOLD GLOW
+======================================================= */
+
+.gold-glow {
+    box-shadow: 0 0 15px rgba(212, 175, 55, .15), 0 0 30px rgba(212, 175, 55, .08);
+}
+
+
+/* =======================================================
+   SECTION FADE ANIMATION
+======================================================= */
+
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+.fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =======================================================
+   RESPONSIVE TABLET
+======================================================= */
+
+@media (max-width: 992px) {
+    .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .couple-grid {
+        grid-template-columns: 1fr;
+    }
+    .couple-symbol {
+        font-size: 60px;
+    }
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =======================================================
+   RESPONSIVE MOBILE
+======================================================= */
+
+@media (max-width: 768px) {
+    .countdown-card {
+        padding: 26px 16px;
+    }
+    .countdown-card h3 {
+        font-size: 42px;
+    }
+    .couple-image {
+        width: 220px;
+        height: 220px;
+    }
+    .couple-card h3 {
+        font-size: 34px;
+    }
+    .timeline-item {
+        padding-left: 60px;
+    }
+    .timeline-content h3 {
+        font-size: 28px;
+    }
+    .love-story-text p {
+        font-size: 16px;
+    }
+}
+
+
+/* =======================================================
+   GALLERY SECTION
+======================================================= */
+
+#gallery {
+    background: linear-gradient( to bottom, #111111, #0d0d0d);
+}
+
+.gallery-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    column-count: 3;
+    column-gap: 16px;
+}
+
+.gallery-item {
+    margin-bottom: 16px;
+    break-inside: avoid;
+    overflow: hidden;
+    border-radius: 24px;
+    cursor: pointer;
+    position: relative;
+}
+
+.gallery-image {
+    width: 100%;
+    display: block;
+    transition: transform .5s ease, filter .5s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+    filter: brightness(1.08);
+}
+
+.gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( to top, rgba(0, 0, 0, .4), transparent);
+    opacity: 0;
+    transition: .3s;
+}
+
+.gallery-item:hover::after {
+    opacity: 1;
+}
+
+
+/* =======================================================
+   LIGHTBOX
+======================================================= */
+
+#lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+}
+
+#lightbox.active {
+    display: flex;
+}
+
+#lightboxImage {
+    max-width: 95%;
+    max-height: 90vh;
+    border-radius: 18px;
+}
+
+#closeLightbox {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+}
+
+
+/* =======================================================
+   VIP QR PASS
+======================================================= */
+
+#qr-section {
+    background: radial-gradient( circle at center, #1a1a1a, #0b0b0b);
+}
+
+.vip-card {
+    max-width: 520px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px;
+    background: linear-gradient( 145deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+    border: 1px solid rgba(212, 175, 55, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .45), 0 0 40px rgba(212, 175, 55, .08);
+}
+
+.vip-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( 120deg, transparent, rgba(255, 255, 255, .05), transparent);
+    animation: shine 8s infinite;
+}
+
+.vip-header {
+    padding: 22px;
+    text-align: center;
+    border-bottom: 1px solid rgba(212, 175, 55, .15);
+}
+
+.vip-header span {
+    color: var(--gold);
+    letter-spacing: .35em;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.vip-content {
+    padding: 40px;
+    text-align: center;
+}
+
+.vip-label {
+    color: #9d9d9d;
+    margin-bottom: 12px;
+}
+
+.vip-content h2 {
+    font-size: 42px;
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 12px;
+}
+
+.guest-count {
+    color: var(--gold);
+    margin-bottom: 30px;
+}
+
+.vip-qr {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.vip-qr svg {
+    background: white;
+    padding: 12px;
+    border-radius: 18px;
+}
+
+.invitation-code {
+    color: #aaa;
+    letter-spacing: .15em;
+    margin-bottom: 18px;
+}
+
+.checkin-success {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, .15);
+    color: #34d399;
+}
+
+.checkin-info {
+    color: #888;
+}
+
+
+/* =======================================================
+   WEDDING WISHES
+======================================================= */
+
+#wishes {
+    background: #111111;
+}
+
+.wishes-placeholder {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 50px;
+    border-radius: 30px;
+    border: 1px solid rgba(212, 175, 55, .1);
+    background: rgba(255, 255, 255, .03);
+}
+
+.wishes-placeholder p {
+    line-height: 2;
+    color: #d6d6d6;
+    font-size: 18px;
+}
+
+
+/* =======================================================
+   CLOSING
+======================================================= */
+
+#closing {
+    background: linear-gradient( to bottom, #111111, #050505);
+    text-align: center;
+}
+
+.closing-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.closing-content p {
+    font-size: 24px;
+    line-height: 1.8;
+    font-style: italic;
+    color: #ddd;
+    margin-bottom: 30px;
+}
+
+.closing-content h3 {
+    color: var(--gold);
+    font-size: 38px;
+}
+
+
+/* =======================================================
+   FOOTER
+======================================================= */
+
+footer {
+    background: #050505;
+    border-top: 1px solid rgba(212, 175, 55, .08);
+    padding: 40px 20px;
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-content h3 {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.footer-content p {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.footer-content small {
+    color: #666;
+}
+
+
+/* =======================================================
+   MOBILE NAVIGATION
+======================================================= */
+
+#mobile-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    gap: 20px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .65);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, .15);
+}
+
+#mobile-nav a {
+    color: white;
+    font-size: 20px;
+    transition: .3s;
+}
+
+#mobile-nav a:hover {
+    transform: translateY(-3px);
+    color: var(--gold);
+}
+
+
+/* =======================================================
+   FLOATING PETALS
+======================================================= */
+
+.petal {
+    position: fixed;
+    top: -50px;
+    z-index: 200;
+    pointer-events: none;
+    opacity: .45;
+    animation: falling linear infinite;
+}
+
+@keyframes falling {
+    from {
+        transform: translateY(-50px) rotate(0deg);
+    }
+    to {
+        transform: translateY(120vh) rotate(360deg);
+    }
+}
+
+
+/* =======================================================
+   GOLD SHINE
+======================================================= */
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+
+/* =======================================================
+   MOBILE
+======================================================= */
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        column-count: 2;
+    }
+    .vip-content {
+        padding: 28px;
+    }
+    .vip-content h2 {
+        font-size: 32px;
+    }
+    .closing-content p {
+        font-size: 18px;
+    }
+    .footer-content h3 {
+        font-size: 28px;
+    }
+    #mobile-nav {
+        gap: 16px;
+        padding: 12px 20px;
+    }
+}
+
+#music-button {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, .2);
+    color: var(--gold);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 999;
+}

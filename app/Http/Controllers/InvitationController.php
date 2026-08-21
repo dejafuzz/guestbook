@@ -21,7 +21,8 @@ class InvitationController extends Controller
         $content = $event->invitationContent;
         $galleries = $event->invitationGalleries;
 
-        return view('invitation.templates.' . $event->template . '.index', compact('event', 'guest', 'content', 'galleries'));
+        // return view('invitation.templates.example', compact('event', 'guest', 'content', 'galleries'));
+        return view('invitation.templates.' . $event->template, compact('event', 'guest', 'content', 'galleries'));
     }
 
 }

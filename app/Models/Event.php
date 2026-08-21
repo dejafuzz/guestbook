@@ -67,4 +67,9 @@ class Event extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function wishes(): HasMany
+    {
+        return $this->hasMany(Wish::class)->latest();
+    }
+
 }
