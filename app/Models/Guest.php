@@ -18,6 +18,10 @@ class Guest extends Model
         'jumlah_tamu',
         'qr_code',
         'status',
+        'jabatan',
+        'keterangan_undangan',
+        'kehadiran',
+        'keterangan',
     ];
 
     public function event(): BelongsTo

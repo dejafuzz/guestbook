@@ -64,7 +64,6 @@
                     <p id="scan-result" class="text-sm text-center text-gray-400 mt-3">Arahkan kamera ke QR code tamu</p>
                 </div>
             </div>
-
             {{-- Modal konfirmasi check-in --}}
             <div id="checkin-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
                 <div class="bg-white rounded-2xl p-6 w-full max-w-sm mx-4">
@@ -78,31 +77,45 @@
                     </div>
 
                     {{-- Info tamu --}}
-                    <div class="bg-gray-50 rounded-xl p-4 mb-5">
-                        <p class="text-xs text-gray-400 mb-1">Nama Tamu</p>
-                        <p class="font-medium text-gray-800 text-lg" id="modal-nama"></p>
-                        <p class="text-sm text-gray-400 mt-1">No. Undangan: <span id="modal-nomor"></span></p>
+                    <div class="bg-gray-50 rounded-xl p-4 mb-5 space-y-3 max-h-60 overflow-y-auto">
+                        <div>
+                            <p class="text-xs text-gray-400">Nama Tamu</p>
+                            <p class="font-semibold text-gray-800 text-base" id="modal-nama"></p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <p class="text-gray-400">No. Undangan</p>
+                                <p class="font-medium text-gray-800" id="modal-nomor"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Tipe Undangan</p>
+                                <p class="font-medium text-gray-800" id="modal-tipe"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Jabatan</p>
+                                <p class="font-medium text-gray-800" id="modal-jabatan"></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400">Kehadiran (RSVP)</p>
+                                <p class="font-medium text-gray-800" id="modal-kehadiran"></p>
+                            </div>
+                        </div>
+                        <div class="text-xs border-t border-gray-200 pt-2">
+                            <p class="text-gray-400">Keterangan</p>
+                            <p class="font-medium text-gray-800 italic" id="modal-keterangan"></p>
+                        </div>
                     </div>
 
                     {{-- Input jumlah hadir --}}
                     <div class="mb-5">
                         <label class="block text-sm text-gray-600 mb-2">Jumlah tamu yang hadir</label>
-                        <div class="flex items-center gap-3">
-                            <button type="button" onclick="decrementHadir()"
-                                class="w-10 h-10 rounded-xl border border-gray-200 text-gray-600 text-lg font-medium hover:bg-gray-50 transition">
-                                −
-                            </button>
-                            <input type="number" id="modal-jumlah-hadir" min="1"
-                                class="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-gray-300" />
-                            <button type="button" onclick="incrementHadir()"
-                                class="w-10 h-10 rounded-xl border border-gray-200 text-gray-600 text-lg font-medium hover:bg-gray-50 transition">
-                                +
-                            </button>
-                        </div>
+                        <input type="number" id="modal-jumlah-hadir" min="1"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-gray-300" />
                         <p class="text-xs text-gray-400 mt-1 text-center">Maksimal <span id="modal-max-hadir"></span> tamu</p>
                     </div>
 
                     <input type="hidden" id="modal-guest-id" />
+                    <input type="hidden" id="modal-metode" value="manual" />
 
                     <div class="flex gap-3">
                         <button onclick="closeCheckinModal()"
@@ -126,8 +139,21 @@
                 <div class="bg-white rounded-2xl border border-gray-100 p-5 mb-3">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <p class="font-medium text-gray-800">{{ $guest->nama_utama }}</p>
-                            <p class="text-sm text-gray-400">{{ $guest->jumlah_tamu }} tamu · #{{ $guest->nomor_undangan ?? '-' }}</p>
+                            <p class="font-medium text-gray-800">
+                                {{ $guest->nama_utama }}
+                                @if($guest->keterangan_undangan)
+                                    <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold uppercase">{{ $guest->keterangan_undangan }}</span>
+                                @endif
+                            </p>
+                            <p class="text-sm text-gray-400">
+                                {{ $guest->jumlah_tamu }} tamu
+                                @if($guest->nomor_undangan) · #{{ $guest->nomor_undangan }} @endif
+                                @if($guest->jabatan) · {{ $guest->jabatan }} @endif
+                                @if($guest->kehadiran) · Kehadiran: {{ $guest->kehadiran }} @endif
+                            </p>
+                            @if($guest->keterangan)
+                                <p class="text-xs text-gray-400 mt-1 italic">Ket: {{ $guest->keterangan }}</p>
+                            @endif
                         </div>
                         <span @class([
                             'text-xs px-2 py-1 rounded-full font-medium',
@@ -144,30 +170,23 @@
                     </div>
 
                     @if(!$guest->sudahCheckIn())
-                        <form method="POST" action="{{ route('receptionist.checkin', $event) }}" class="checkin-form">
-                            @csrf
-                            <input type="hidden" name="guest_id" value="{{ $guest->id }}">
-                            <input type="hidden" name="metode" value="manual">
-
-                            <div class="flex items-center gap-3">
-                                <label class="text-sm text-gray-500">Jumlah hadir:</label>
-                                <input
-                                    type="number"
-                                    name="jumlah_hadir"
-                                    value="{{ $guest->jumlah_tamu }}"
-                                    min="1"
-                                    max="{{ $guest->jumlah_tamu }}"
-                                    class="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center"
-                                />
-                                <button type="button"
-                                    onclick="confirmCheckin(this.closest('form'), '{{ $guest->nama_utama }}')"
-                                    class="ml-auto bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition">
-                                    Check-in
-                                </button>
-                            </div>
-                        </form>
+                        <button type="button"
+                            onclick='openCheckinModal({
+                                id: "{{ $guest->id }}",
+                                nama: {{ json_encode($guest->nama_utama) }},
+                                jumlah_tamu: {{ $guest->jumlah_tamu }},
+                                nomor_undangan: {{ json_encode($guest->nomor_undangan ?? '-') }},
+                                jabatan: {{ json_encode($guest->jabatan ?? '-') }},
+                                keterangan_undangan: {{ json_encode($guest->keterangan_undangan ?? '-') }},
+                                kehadiran: {{ json_encode($guest->kehadiran ?? '-') }},
+                                keterangan: {{ json_encode($guest->keterangan ?? '-') }},
+                                metode: "manual"
+                            })'
+                            class="w-full bg-gray-800 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-700 transition mt-1">
+                            Check-in
+                        </button>
                     @else
-                        <p class="text-sm text-gray-400">
+                        <p class="text-sm text-gray-400 mt-1">
                             Hadir {{ $guest->checkIn->jumlah_hadir }} orang
                             · {{ $guest->checkIn->waktu_checkin->format('H:i') }}
                         </p>
@@ -242,18 +261,30 @@
                 return;
             }
 
+            // QR scan: set metode qr then open modal
+            data.guest.metode = 'qr';
             openCheckinModal(data.guest);
         }
 
-        // Modal check-in
+        // Modal check-in — bisa dipanggil dari QR scan maupun manual
         function openCheckinModal(guest) {
             maxHadir = guest.jumlah_tamu;
+
             document.getElementById('modal-guest-id').value = guest.id;
+            document.getElementById('modal-metode').value = guest.metode || 'manual';
             document.getElementById('modal-nama').textContent = guest.nama;
             document.getElementById('modal-nomor').textContent = guest.nomor_undangan;
-            document.getElementById('modal-jumlah-hadir').value = guest.jumlah_tamu;
-            document.getElementById('modal-jumlah-hadir').max = guest.jumlah_tamu;
+            document.getElementById('modal-tipe').textContent = guest.keterangan_undangan;
+            document.getElementById('modal-jabatan').textContent = guest.jabatan;
+            document.getElementById('modal-kehadiran').textContent = guest.kehadiran;
+            document.getElementById('modal-keterangan').textContent = guest.keterangan;
+
+            const input = document.getElementById('modal-jumlah-hadir');
+            input.value = guest.jumlah_tamu;
+            input.max = guest.jumlah_tamu;
+            input.min = 1;
             document.getElementById('modal-max-hadir').textContent = guest.jumlah_tamu;
+
             document.getElementById('checkin-modal').classList.remove('hidden');
         }
 
@@ -263,18 +294,30 @@
 
         function incrementHadir() {
             const input = document.getElementById('modal-jumlah-hadir');
-            input.value = parseInt(input.value) + 1;
+            const val = parseInt(input.value);
+            if (val < maxHadir) input.value = val + 1;
         }
 
         function decrementHadir() {
             const input = document.getElementById('modal-jumlah-hadir');
-            if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+            const val = parseInt(input.value);
+            if (val > 1) input.value = val - 1;
         }
 
         async function submitCheckin() {
-            const guestId = document.getElementById('modal-guest-id').value;
-            const jumlahHadir = document.getElementById('modal-jumlah-hadir').value;
-            const nama = document.getElementById('modal-nama').textContent;
+            const guestId   = document.getElementById('modal-guest-id').value;
+            const metode    = document.getElementById('modal-metode').value;
+            const jumlahHadir = parseInt(document.getElementById('modal-jumlah-hadir').value);
+            const nama      = document.getElementById('modal-nama').textContent;
+
+            if (isNaN(jumlahHadir) || jumlahHadir < 1) {
+                Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Jumlah hadir harus minimal 1.', confirmButtonColor: '#1f2937' });
+                return;
+            }
+            if (jumlahHadir > maxHadir) {
+                Swal.fire({ icon: 'warning', title: 'Perhatian', text: `Jumlah hadir maksimal ${maxHadir} tamu.`, confirmButtonColor: '#1f2937' });
+                return;
+            }
 
             const res = await fetch('{{ route('receptionist.checkin', $event) }}', {
                 method: 'POST',
@@ -286,7 +329,7 @@
                 body: JSON.stringify({
                     guest_id: guestId,
                     jumlah_hadir: jumlahHadir,
-                    metode: 'qr',
+                    metode: metode,
                 }),
             });
 
@@ -300,23 +343,8 @@
                 confirmButtonColor: '#1f2937',
                 timer: data.success ? 2500 : null,
                 timerProgressBar: data.success,
-            });
-        }
-
-        // SweetAlert untuk check-in manual
-        function confirmCheckin(form, nama) {
-            Swal.fire({
-                title: 'Konfirmasi Check-in',
-                text: `${nama} akan dicatat sebagai hadir.`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#1f2937',
-                cancelButtonColor: '#e5e7eb',
-                confirmButtonText: 'Ya, check-in',
-                cancelButtonText: 'Batal',
-                reverseButtons: true,
-            }).then((result) => {
-                if (result.isConfirmed) form.submit();
+            }).then(() => {
+                if (data.success) window.location.reload();
             });
         }
     </script>

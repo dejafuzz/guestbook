@@ -45,7 +45,11 @@
                     <p class="text-sm text-gray-400 mb-3">Upload file CSV dengan kolom:
                         <code class="bg-gray-100 px-1 rounded text-xs">nama_utama</code>,
                         <code class="bg-gray-100 px-1 rounded text-xs">nomor_undangan (tidak wajib)</code>,
-                        <code class="bg-gray-100 px-1 rounded text-xs">jumlah_tamu</code>
+                        <code class="bg-gray-100 px-1 rounded text-xs">jumlah_tamu</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">jabatan</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">keterangan_undangan</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">kehadiran</code>,
+                        <code class="bg-gray-100 px-1 rounded text-xs">keterangan</code>
                     </p>
                     
                     {{-- Card Kecil untuk Download Template --}}
@@ -57,7 +61,11 @@
                         </div>
                         <div>
                             <p class="font-medium text-gray-700 mb-0.5">Belum punya template?</p>
-                            <a href="{{ asset('template/guest-example.xlsx') }}" class="text-blue-600 hover:underline font-semibold" download="">Download Excel Template</a>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ asset('template/guest-example.xlsx') }}" class="text-blue-600 hover:underline font-semibold" download="">Download Excel Template</a>
+                                <span class="text-gray-300">|</span>
+                                <a href="{{ asset('template/guest-example.csv') }}" class="text-blue-600 hover:underline font-semibold" download="">Download CSV Template</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -131,11 +139,21 @@
                             <div class="px-5 py-4">
                                 <div class="flex items-start justify-between mb-2">
                                     <div>
-                                        <p class="font-medium text-gray-800 text-sm">{{ $guest->nama_utama }}</p>
+                                        <p class="font-medium text-gray-800 text-sm">
+                                            {{ $guest->nama_utama }}
+                                            @if($guest->keterangan_undangan)
+                                                <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold uppercase">{{ $guest->keterangan_undangan }}</span>
+                                            @endif
+                                        </p>
                                         <p class="text-xs text-gray-400 mt-0.5">
                                             {{ $guest->jumlah_tamu }} tamu
                                             @if($guest->nomor_undangan) · #{{ $guest->nomor_undangan }} @endif
+                                            @if($guest->jabatan) · {{ $guest->jabatan }} @endif
+                                            @if($guest->kehadiran) · Kehadiran: {{ $guest->kehadiran }} @endif
                                         </p>
+                                        @if($guest->keterangan)
+                                            <p class="text-[11px] text-gray-400 mt-1 italic">Ket: {{ $guest->keterangan }}</p>
+                                        @endif
                                     </div>
                                     <span @class([
                                         'text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0',
@@ -178,8 +196,9 @@
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
                                 <tr>
-                                    <th class="px-5 py-3 text-left">Nama</th>
-                                    <th class="px-5 py-3 text-left">No. Undangan</th>
+                                    <th class="px-5 py-3 text-left">Nama & Jabatan</th>
+                                    <th class="px-5 py-3 text-left">No. Undangan & Tipe</th>
+                                    <th class="px-5 py-3 text-left">Kehadiran & Ket.</th>
                                     <th class="px-5 py-3 text-center">Tamu</th>
                                     <th class="px-5 py-3 text-center">Status</th>
                                     <th class="px-5 py-3 text-right">Aksi</th>
@@ -202,9 +221,25 @@
                                             "Kami yang berbahagia,\n*{$groomName} & {$brideName}*";
                                     @endphp
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-5 py-4 font-medium text-gray-800">{{ $guest->nama_utama }}</td>
-                                        <td class="px-5 py-4 text-gray-500">{{ $guest->nomor_undangan ?? '-' }}</td>
-                                        <td class="px-5 py-4 text-center text-gray-600">{{ $guest->jumlah_tamu }}</td>
+                                        <td class="px-5 py-4 font-medium text-gray-800">
+                                            <div>{{ $guest->nama_utama }}</div>
+                                            @if($guest->jabatan)
+                                                <div class="text-xs text-gray-400 font-normal mt-0.5">{{ $guest->jabatan }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-5 py-4 text-gray-500">
+                                            <div>{{ $guest->nomor_undangan ?? '-' }}</div>
+                                            @if($guest->keterangan_undangan)
+                                                <span class="inline-block mt-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold uppercase">{{ $guest->keterangan_undangan }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-5 py-4 text-gray-500">
+                                            <div>{{ $guest->kehadiran ?? '-' }}</div>
+                                            @if($guest->keterangan)
+                                                <div class="text-xs text-gray-400 italic max-w-xs truncate mt-0.5" title="{{ $guest->keterangan }}">{{ $guest->keterangan }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-5 py-4 text-center text-gray-600 font-medium">{{ $guest->jumlah_tamu }}</td>
                                         <td class="px-5 py-4 text-center">
                                             <span @class([
                                                 'text-xs px-2 py-1 rounded-full font-medium',

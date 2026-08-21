@@ -42,9 +42,16 @@ class GuestController extends Controller
             'nama_utama' => 'required|string|max:255',
             'nomor_undangan' => 'nullable|string|max:50',
             'jumlah_tamu' => 'required|integer|min:1',
+            'jabatan' => 'nullable|string|max:255',
+            'keterangan_undangan' => 'nullable|string|max:255',
+            'kehadiran' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string',
         ]);
 
-        $event->guests()->create($request->only(['nama_utama', 'nomor_undangan', 'jumlah_tamu']));
+        $event->guests()->create($request->only([
+            'nama_utama', 'nomor_undangan', 'jumlah_tamu',
+            'jabatan', 'keterangan_undangan', 'kehadiran', 'keterangan'
+        ]));
 
         return redirect()->route('admin.guests.index', $event)->with('success', 'Tamu berhasil ditambahkan.');
     }
@@ -94,9 +101,16 @@ class GuestController extends Controller
             'nama_utama' => 'required|string|max:255',
             'nomor_undangan' => 'nullable|string|max:50',
             'jumlah_tamu' => 'required|integer|min:1',
+            'jabatan' => 'nullable|string|max:255',
+            'keterangan_undangan' => 'nullable|string|max:255',
+            'kehadiran' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string',
         ]);
 
-        $guest->update($request->only(['nama_utama', 'nomor_undangan', 'jumlah_tamu']));
+        $guest->update($request->only([
+            'nama_utama', 'nomor_undangan', 'jumlah_tamu',
+            'jabatan', 'keterangan_undangan', 'kehadiran', 'keterangan'
+        ]));
 
         return redirect()->route('admin.guests.index', $event)->with('success', 'Data tamu berhasil diperbarui.');
     }

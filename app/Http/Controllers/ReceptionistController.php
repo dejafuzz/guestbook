@@ -97,6 +97,10 @@ class ReceptionistController extends Controller
                 'nama' => $guest->nama_utama,
                 'jumlah_tamu' => $guest->jumlah_tamu,
                 'nomor_undangan' => $guest->nomor_undangan ?? '-',
+                'jabatan' => $guest->jabatan ?? '-',
+                'keterangan_undangan' => $guest->keterangan_undangan ?? '-',
+                'kehadiran' => $guest->kehadiran ?? '-',
+                'keterangan' => $guest->keterangan ?? '-',
             ]
         ]);
     }

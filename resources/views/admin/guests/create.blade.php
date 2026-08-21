@@ -34,11 +34,39 @@
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
                     </div>
 
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <label class="block text-sm text-gray-600 mb-1">Jumlah Tamu <span class="text-red-400">*</span></label>
                         <input type="number" name="jumlah_tamu" value="{{ old('jumlah_tamu', 1) }}" min="1"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
                         @error('jumlah_tamu') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-1">Jabatan</label>
+                        <input type="text" name="jabatan" value="{{ old('jabatan') }}"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
+                        @error('jabatan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-1">Keterangan Undangan (e.g. VIP, Biasa)</label>
+                        <input type="text" name="keterangan_undangan" value="{{ old('keterangan_undangan') }}"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
+                        @error('keterangan_undangan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-1">Kehadiran</label>
+                        <input type="text" name="kehadiran" value="{{ old('kehadiran') }}"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300" />
+                        @error('kehadiran') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm text-gray-600 mb-1">Keterangan</label>
+                        <textarea name="keterangan" rows="3"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300">{{ old('keterangan') }}</textarea>
+                        @error('keterangan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="flex gap-3">
