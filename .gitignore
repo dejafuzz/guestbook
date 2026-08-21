@@ -42,3 +42,5 @@ Thumbs.db
 # Homestead
 Homestead.json
 Homestead.yaml
+
+public/template
