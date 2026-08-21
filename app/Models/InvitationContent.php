@@ -13,8 +13,18 @@ class InvitationContent extends Model
     protected $fillable = [
         'event_id',
         'groom_name',
-        'bride_name',
+        'groom_full_name',
+        'groom_father',
+        'groom_mother',
+        'groom_child_order',
+        'groom_instagram',
         'groom_photo',
+        'bride_name',
+        'bride_full_name',
+        'bride_father',
+        'bride_mother',
+        'bride_child_order',
+        'bride_instagram',
         'bride_photo',
         'hero_photo',
         'love_story',
@@ -30,7 +40,9 @@ class InvitationContent extends Model
         'reception_maps_url',
         'opening_quote',
         'closing_quote',
+        'music_file',
     ];
+
 
     protected function casts(): array
     {

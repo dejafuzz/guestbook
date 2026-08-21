@@ -13,6 +13,7 @@ use App\Http\Controllers\PinController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\SouvenirController;
+use App\Http\Controllers\WishController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
@@ -91,3 +92,6 @@ Route::middleware('pin.souvenir')->group(function () {
 
 Route::get('/{slug}/{qr_code}/qr', [InvitationController::class, 'show'])->name('invitation.show');
 Route::get('/event/{slug}/monitor', [MonitorController::class, 'show'])->name('monitor.show');
+
+Route::post('/event/{event}/wishes', [WishController::class, 'store'])->name('wishes.store');
+Route::get('/event/{event}/wishes', [WishController::class, 'index'])->name('wishes.index');
