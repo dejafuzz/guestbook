@@ -310,14 +310,6 @@
             const jumlahHadir = parseInt(document.getElementById('modal-jumlah-hadir').value);
             const nama      = document.getElementById('modal-nama').textContent;
 
-            if (isNaN(jumlahHadir) || jumlahHadir < 1) {
-                Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Jumlah hadir harus minimal 1.', confirmButtonColor: '#1f2937' });
-                return;
-            }
-            if (jumlahHadir > maxHadir) {
-                Swal.fire({ icon: 'warning', title: 'Perhatian', text: `Jumlah hadir maksimal ${maxHadir} tamu.`, confirmButtonColor: '#1f2937' });
-                return;
-            }
 
             const res = await fetch('{{ route('receptionist.checkin', $event) }}', {
                 method: 'POST',
